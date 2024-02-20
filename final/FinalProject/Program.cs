@@ -6,29 +6,29 @@ public class Video
     public string Title { get; }
     public string Author { get; }
     public int Length { get; }
-    private List<Comment> comments;
+    private List<Comment> _comments;
 
     public Video(string title, string author, int length)
     {
         Title = title;
         Author = author;
         Length = length;
-        comments = new List<Comment>();
+        _comments = new List<Comment>();
     }
 
     public void AddComment(string commenterName, string commentText)
     {
-        comments.Add(new Comment(commenterName, commentText));
+        _comments.Add(new Comment(commenterName, commentText));
     }
 
     public int GetNumComments()
     {
-        return comments.Count;
+        return _comments.Count;
     }
 
     public List<Comment> GetAllComments()
     {
-        return comments;
+        return _comments;
     }
 }
 
@@ -91,23 +91,23 @@ public class Address
 public class Order
 {
     public Customer Customer { get; }
-    private List<Product> products;
+    private List<Product> _products;
 
     public Order(Customer customer)
     {
         Customer = customer;
-        products = new List<Product>();
+        _products = new List<Product>();
     }
 
     public void AddProduct(Product product)
     {
-        products.Add(product);
+        _products.Add(product);
     }
 
     public decimal CalculateTotalCost()
     {
         decimal totalCost = 0;
-        foreach (var product in products)
+        foreach (var product in _products)
         {
             totalCost += product.Price * product.Quantity;
         }
@@ -115,7 +115,7 @@ public class Order
     }
 }
 
-public class Event
+public abstract class Event
 {
     public string EventTitle { get; }
     public string Description { get; }
@@ -132,10 +132,7 @@ public class Event
         Address = address;
     }
 
-    public string GenerateStandardMessage()
-    {
-        return $"Event: {EventTitle}, Date: {Date}, Time: {Time}, Location: {Address}";
-    }
+    public abstract string GenerateStandardMessage();
 }
 
 public class Lecture : Event
@@ -149,6 +146,11 @@ public class Lecture : Event
         Speaker = speaker;
         Capacity = capacity;
     }
+
+    public override string GenerateStandardMessage()
+    {
+        return $"Event: {EventTitle}, Date: {Date}, Time: {Time}, Location: {Address}";
+    }
 }
 
 public class Reception : Event
@@ -160,6 +162,11 @@ public class Reception : Event
     {
         RSVP_Email = rsvpEmail;
     }
+
+    public override string GenerateStandardMessage()
+    {
+        return $"Event: {EventTitle}, Date: {Date}, Time: {Time}, Location: {Address}, RSVP Email: {RSVP_Email}";
+    }
 }
 
 public class OutdoorGathering : Event
@@ -170,6 +177,11 @@ public class OutdoorGathering : Event
         : base(eventTitle, description, date, time, address)
     {
         WeatherForecast = weatherForecast;
+    }
+
+    public override string GenerateStandardMessage()
+    {
+        return $"Event: {EventTitle}, Date: {Date}, Time: {Time}, Location: {Address}, Weather Forecast: {WeatherForecast}";
     }
 }
 
